@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   }
 };
 
+import { Terminal } from "./components/Terminal";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +39,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Terminal />
         {children}
       </body>
     </html>

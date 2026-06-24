@@ -1,0 +1,87 @@
+import { NextResponse } from "next/server";
+import * as adminService from "../../../lib/admin-service";
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, name, description, status, visibility } = body;
+
+    if (!id || !name || !status) {
+      return NextResponse.json(
+        { error: "Missing required fields (id, name, status)" },
+        { status: 400 }
+      );
+    }
+
+    // Enforce slug format (lowercase alphanumeric and dashes)
+    const slugRegex = /^[a-z0-9-]+$/;
+    if (!slugRegex.test(id)) {
+      return NextResponse.json(
+        { error: "ID must be a slug (lowercase letters, numbers, and dashes only)" },
+        { status: 400 }
+      );
+    }
+
+    const data = await adminService.adminCreatePersona({
+      id,
+      name,
+      description: description || "",
+      status,
+      visibility: visibility || "public"
+    });
+
+    return NextResponse.json({ success: true, data });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("API Create Persona Error:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { id, name, description, status, visibility } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing required field (id)" },
+        { status: 400 }
+      );
+    }
+
+    const data = await adminService.adminUpdatePersona(id, {
+      name,
+      description,
+      status,
+      visibility
+    });
+
+    return NextResponse.json({ success: true, data });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("API Update Persona Error:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing required parameter (id)" },
+        { status: 400 }
+      );
+    }
+
+    const data = await adminService.adminDeletePersona(id);
+    return NextResponse.json({ success: true, data });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("API Delete Persona Error:", errorMessage);
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}

@@ -3,50 +3,87 @@ interface Project {
   title: string;
   description: string;
   status: string;
-  currentFocus?: string;
-  links: { github?: string; demo?: string; notes?: string };
+  tags?: string[];
+  current_focus?: string | null;
+  github_link?: string | null;
+  demo_link?: string | null;
+  notes_link?: string | null;
 }
 
 interface ProjectCardProps {
   project: Project;
+  selected?: boolean;
+  onClick?: (id: string) => void;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, selected, onClick }: ProjectCardProps) {
+  const handleCardClick = () => {
+    if (onClick) {
+      onClick(project.id);
+    }
+  };
+
   return (
-    <section className="card p-4 m-2 rounded" style={{backgroundColor: "var(--card-bg)", border: `1px solid var(--card-border)`, boxShadow: `var(--card-shadow)`}}>
-      <h3 className="font-semibold text-lg" style={{color: "var(--foreground)"}}>
-        {project.title}
-      </h3>
-      <p className="mb-2" style={{color: "var(--foreground)"}}>{project.description}</p>
-      <div className="flex items-center gap-2">        
-        <span style={{
-          backgroundColor: "var(--accent)",
-          color: "white",
-          fontWeight: "600",
-          fontSize: "0.75rem",
-          lineHeight: "1rem",
-          borderRadius: "9999px",
-          padding: "0.125rem 0.5rem",
-          textTransform: "uppercase",
-          userSelect: "none"
-        }}>
-          {project.status}
-        </span>
-        {project.currentFocus && <small style={{color: "var(--foreground)", fontStyle: "italic"}}>{project.currentFocus}</small>}
+    <section 
+      onClick={handleCardClick}
+      className="card p-4 m-2 rounded border transition-all cursor-pointer text-left focus:outline-none"
+      style={{
+        backgroundColor: "var(--card-bg)",
+        borderColor: selected ? "var(--accent)" : "var(--card-border)",
+        boxShadow: selected ? "0 0 8px var(--accent)" : "var(--card-shadow)"
+      }}
+      role="button"
+      tabIndex={0}
+      aria-pressed={selected}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCardClick();
+        }
+      }}
+    >
+      <div className="flex justify-between items-start">
+        <h3 className="font-semibold text-lg" style={{color: "var(--foreground)"}}>
+          {project.title}
+        </h3>
+        {selected && (
+          <span className="text-xs text-blue-600 dark:text-blue-400 font-mono font-bold select-none">
+            [ACTIVE]
+          </span>
+        )}
       </div>
-      <div className="mt-2 flex gap-4">
-        {project.links.github && (
-          <a href={project.links.github} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
+      <p className="mb-2" style={{color: "var(--foreground)"}}>{project.description}</p>
+      <div className="flex flex-wrap items-center gap-2">        
+        {project.tags && project.tags.map((tag, idx) => (
+          <span key={idx} style={{
+            backgroundColor: "var(--accent)",
+            color: "white",
+            fontWeight: "600",
+            fontSize: "0.75rem",
+            lineHeight: "1rem",
+            borderRadius: "9999px",
+            padding: "0.125rem 0.5rem",
+            textTransform: "uppercase",
+            userSelect: "none"
+          }}>
+            {tag}
+          </span>
+        ))}
+        {project.current_focus && <small style={{color: "var(--foreground)", fontStyle: "italic"}}>{project.current_focus}</small>}
+      </div>
+      <div className="mt-2 flex gap-4" onClick={(e) => e.stopPropagation()}>
+        {project.github_link && (
+          <a href={project.github_link} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
             GitHub
           </a>
         )}
-        {project.links.demo && (
-          <a href={project.links.demo} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
+        {project.demo_link && (
+          <a href={project.demo_link} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
             Demo
           </a>
         )}
-        {project.links.notes && (
-          <a href={project.links.notes} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
+        {project.notes_link && (
+          <a href={project.notes_link} style={{color: "var(--accent)"}} className="hover:underline" target="_blank" rel="noreferrer">
             Notes
           </a>
         )}

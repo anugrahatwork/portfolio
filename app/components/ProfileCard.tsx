@@ -1,14 +1,61 @@
 import { CurrentFocusCard } from "./CurrentFocusCard";
-import { Profile } from "../../data/profile";
-import { Persona } from "../../data/personas";
+
+export interface Profile {
+  name: string;
+  tagline: string;
+  now: string;
+  current_focus_description: string;
+}
+
+export interface Persona {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+}
 
 export interface ProfileCardProps {
   profile: Profile;
   personas: Persona[];
   nowElevated?: boolean;
+  compact?: boolean;
 }
 
-export function ProfileCard({ profile, personas, nowElevated = false }: ProfileCardProps) {
+export function ProfileCard({ profile, personas, nowElevated = false, compact = false }: ProfileCardProps) {
+  // Map the Supabase current_focus_description back to the structure CurrentFocusCard expects
+  const profileForFocus = {
+    ...profile,
+    currentFocus: {
+      description: profile.current_focus_description,
+      activePersonas: [] // We don't have this in simple DB schema yet, or it's inferred
+    }
+  };
+
+  if (compact) {
+    return (
+      <section className="glass-card p-6 rounded-2xl mb-6 flex flex-col items-center text-center animate-fade-in">
+        <img
+          src="/profile.png"
+          alt="Profile Image"
+          className="w-24 h-24 rounded-full mb-4 border-2 border-accent/30 p-1 shadow-md hover:scale-105 transition-transform duration-300"
+        />
+        <h1 className="text-2xl font-bold leading-tight text-gray-900 dark:text-gray-100">
+          {profile.name}
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-2 px-2">
+          {profile.tagline}
+        </p>
+        
+        <button 
+          onClick={() => window.open('https://www.linkedin.com/in/anugrahxyz', '_blank')} 
+          className="mt-5 w-full py-2.5 bg-accent text-white font-medium rounded-xl hover:bg-opacity-95 active:scale-[0.98] transition-all focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 text-sm shadow-sm cursor-pointer"
+        >
+          Let&apos;s collaborate
+        </button>
+      </section>
+    );
+  }
+
   return (
     <section className="card p-8 mb-8 rounded shadow" style={{backgroundColor: "var(--card-bg)", border: `1px solid var(--card-border)`, boxShadow: `var(--card-shadow)`}}>
       <div className="flex flex-col md:flex-row items-center mb-4">
@@ -40,7 +87,7 @@ export function ProfileCard({ profile, personas, nowElevated = false }: ProfileC
           {profile.now}. A quiet exploration of new ideas and tools.
         </p>
       </div>
-      {nowElevated && <CurrentFocusCard profile={profile} personas={personas} />}
+      {nowElevated && <CurrentFocusCard profile={profileForFocus} personas={personas} />}
     </section>
   );
 }

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "8a3c03e4-4109-4b84-a993-d8f78b296e81",
+    "title": "Implement Dynamic Task-Based Logging Lifecycle",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:32:56.675877+00:00"
+  },
+  {
+    "id": "28a93bc9-aa8c-4558-93b7-c1ac9dcc4f18",
+    "title": "Clean and Optimize Logging System",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:36:27.681904+00:00"
+  },
+  {
+    "id": "dc5588f2-03d1-4ef7-b4ba-d5145b087503",
+    "title": "Implement Real-time Event-Driven Chat Sync",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:40:49.413707+00:00"
+  },
+  {
+    "id": "596ae283-1acc-4815-be16-2bdcd6a312d2",
+    "title": "Write Setup Documentation for External Projects",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:44:58.268304+00:00"
+  },
+  {
+    "id": "15bb8bfa-c196-4aa0-b511-97c537446749",
+    "title": "Make Setup Documentation Framework-Agnostic",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:47:22.38381+00:00"
+  },
+  {
+    "id": "7deeadbf-9941-418a-b7f4-0f9577569be9",
+    "title": "Implement Persona CRUD Management Panel in Settings",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T02:57:27.799907+00:00"
+  },
+  {
+    "id": "9b9eb588-3497-465c-975d-b0f3724990b1",
+    "title": "Move Persona CRUD Management to Chat Sidebar and Header",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T03:04:51.09684+00:00"
+  },
+  {
+    "id": "1fdafb82-b994-480b-bfec-321f12309d5f",
+    "title": "Test Selective Logging Improvement",
+    "description": "Task created and tracked automatically by developer agent.",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T03:13:49.199275+00:00"
+  },
+  {
+    "id": "f797085f-138e-4167-a399-8b2acb4f2f1e",
+    "title": "adding shareable project and task",
+    "description": "I am planning to create shareable project so the other persona and user can use it",
+    "status": "done",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T01:59:58.43151+00:00"
+  },
+  {
+    "id": "9715d2d9-58c5-47dc-b0ff-a372f9ed92c6",
+    "title": "Adding Webhook",
+    "description": "",
+    "status": "in_progress",
+    "project_id": "portfolio-project",
+    "parent_id": null,
+    "created_at": "2026-06-15T16:32:39.034805+00:00"
+  }
+]

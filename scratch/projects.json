@@ -1,0 +1,66 @@
+[
+  {
+    "id": "askred-mitra-apps",
+    "title": "Askred Mitra Apps",
+    "description": "It is used for seamless application integration between Askrindo and BRI, covering insurance pre-sale, post-sale, and distribution for manufacturing companies",
+    "status": "shipped",
+    "current_focus": "Maintaining and optimizing the app",
+    "github_link": null,
+    "demo_link": null,
+    "notes_link": null,
+    "visibility": "private",
+    "created_at": "2026-06-12T09:06:26.958585+00:00",
+    "relatedPersonas": [
+      "fullstack-developer",
+      "devops-engineer"
+    ]
+  },
+  {
+    "id": "akk-apps",
+    "title": "A.K.K Apps",
+    "description": "It is used to simplify the claims process for Askrindo Mitra and to provide more transparent and seamless claims analytics from Askrindo.",
+    "status": "building",
+    "current_focus": "Enhancing and Implementing new features",
+    "github_link": null,
+    "demo_link": null,
+    "notes_link": null,
+    "visibility": "private",
+    "created_at": "2026-06-12T09:06:26.958585+00:00",
+    "relatedPersonas": [
+      "fullstack-developer",
+      "devops-engineer"
+    ]
+  },
+  {
+    "id": "promptbase-prompt-seller",
+    "title": "Promptbase Prompt Seller",
+    "description": "Sell-ready prompt, fully optimized and ready to use on Promptbase.com.",
+    "status": "exploring",
+    "current_focus": "Enhancing and Implementing new features",
+    "github_link": null,
+    "demo_link": null,
+    "notes_link": null,
+    "visibility": "public",
+    "created_at": "2026-06-12T09:06:26.958585+00:00",
+    "relatedPersonas": [
+      "prompt-engineer"
+    ]
+  },
+  {
+    "id": "portfolio-project",
+    "title": "Portfolio Project",
+    "description": "My personal portfolio website to showcase my projects, skills, and experiences.",
+    "status": "shipped",
+    "current_focus": "Adding new features and updating content",
+    "github_link": null,
+    "demo_link": null,
+    "notes_link": null,
+    "visibility": "public",
+    "created_at": "2026-06-12T09:06:26.958585+00:00",
+    "relatedPersonas": [
+      "fullstack-developer",
+      "devops-engineer",
+      "indie-mobile-developer"
+    ]
+  }
+]

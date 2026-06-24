@@ -1,9 +1,15 @@
-import { Profile } from "../../data/profile";
-import { Persona } from "../../data/personas";
-
 export interface CurrentFocusCardProps {
-  profile: Profile;
-  personas: Persona[];
+  profile: {
+    currentFocus: {
+      description: string;
+      activePersonas: string[];
+    };
+  };
+  personas: {
+    id: string;
+    name: string;
+    status: string;
+  }[];
 }
 
 export function CurrentFocusCard({ profile, personas = [] }: CurrentFocusCardProps) {
@@ -12,10 +18,10 @@ export function CurrentFocusCard({ profile, personas = [] }: CurrentFocusCardPro
   if (!currentFocus) return null;
 
   const activePersonas = personas.filter((p) =>
-    currentFocus.activePersonas.includes(p.id)
+    currentFocus.activePersonas?.includes(p.id)
   );
   const inactivePersonas = personas.filter(
-    (p) => !currentFocus.activePersonas.includes(p.id) && p.status !== "paused"
+    (p) => !currentFocus.activePersonas?.includes(p.id) && p.status !== "paused"
   );
   const pausedPersonas = personas.filter((p) => p.status === "paused");
 

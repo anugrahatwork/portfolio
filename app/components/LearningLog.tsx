@@ -1,6 +1,20 @@
-import { LearningLog as LearningLogModel } from "../../data/learningLogs";
-import { Persona } from "../../data/personas";
-import { Project } from "../../data/projects";
+interface LearningLogModel {
+  id: string;
+  content: string;
+  inspiredByPersona: string[];
+  linkedProjects: string[];
+  created_at: string;
+}
+
+interface Persona {
+  id: string;
+  name: string;
+}
+
+interface Project {
+  id: string;
+  title: string;
+}
 
 interface LearningLogProps {
   learningLogs: LearningLogModel[];
@@ -24,7 +38,9 @@ export function LearningLog({ learningLogs, personas, projects }: LearningLogPro
       <ul>
         {learningLogs.map((log) => (
           <li key={log.id} className="mb-8 rounded bg-white dark:bg-gray-900 p-6 shadow border border-gray-300 dark:border-gray-700">
-            <time className="block text-sm text-gray-500 dark:text-gray-400 mb-2">{log.createdAt}</time>
+            <time className="block text-sm text-gray-500 dark:text-gray-400 mb-2">
+              {new Date(log.created_at).toLocaleDateString()}
+            </time>
             <p className="mb-2 text-gray-700 dark:text-gray-300 max-w-prose whitespace-pre-wrap">
               {log.content}
             </p>
