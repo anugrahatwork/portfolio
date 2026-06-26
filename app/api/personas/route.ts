@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import * as adminService from "../../../lib/admin-service";
+import { verifyRequestAuth } from "@/lib/firebase-admin";
 
 export async function POST(req: Request) {
   try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { id, name, description, status, visibility } = body;
 
@@ -40,6 +46,11 @@ export async function POST(req: Request) {
 
 export async function PATCH(req: Request) {
   try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { id, name, description, status, visibility } = body;
 
@@ -67,6 +78,11 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 

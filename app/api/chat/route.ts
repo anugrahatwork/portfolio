@@ -1,8 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 import * as adminService from "../../../lib/admin-service";
+import { verifyRequestAuth } from "@/lib/firebase-admin";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || "");
+
 
 // Tool definitions for Gemini
 const tools = [
@@ -97,6 +99,11 @@ interface ToolArgs {
 
 export async function POST(req: Request) {
   try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ reply: "UNAUTHORIZED: You must be logged in as admin to use the chatbot." }, { status: 401 });
+    }
+
     const body = await req.json();
     const userMessage = body.message;
     const { activePersonaId, activeProjectId, activeTaskId } = body;
