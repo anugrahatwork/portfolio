@@ -36,5 +36,5 @@ plancli log bulk --task=<captured_task_id> --md=task.md
 - List projects: `plancli project list`
 - Link directory: `plancli project link <project_id>`
 - List tasks: `plancli task list`
-- Update task status: `plancli task status <task_id> <status_value>` (values: `todo`, `in_progress`, `complete`)
+- Update task status: `plancli task status <task_id> <status_value>` (values: `todo`, `in_progress`, `done`)
 - Add single log: `plancli log add --task=<task_id> -m "<message>"`

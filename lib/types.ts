@@ -59,3 +59,15 @@ export interface DbUserRole {
   user_id: string;
   role: Role;
 }
+
+export type TaskStatus = 'todo' | 'in_progress' | 'done';
+
+export interface DbTask {
+  id: string;
+  title: string;
+  project_id: string;
+  parent_id: string | null;
+  description: string;
+  status: TaskStatus;
+  created_at: any;
+}

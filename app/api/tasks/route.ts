@@ -53,7 +53,16 @@ export async function PATCH(req: Request) {
 
     const updates: any = {};
     if (title !== undefined) updates.title = title;
-    if (status !== undefined) updates.status = status;
+    if (status !== undefined) {
+      const allowedStatuses = ["todo", "in_progress", "done"];
+      if (!allowedStatuses.includes(status)) {
+        return NextResponse.json(
+          { error: `Invalid status '${status}'. Allowed values: ${allowedStatuses.join(", ")}` },
+          { status: 400 }
+        );
+      }
+      updates.status = status;
+    }
     if (description !== undefined) updates.description = description;
 
     const data = await adminService.adminUpdateTask(id, updates);
