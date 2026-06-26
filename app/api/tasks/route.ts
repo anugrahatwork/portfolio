@@ -51,11 +51,12 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const data = await adminService.adminUpdateTask(id, {
-      title,
-      status,
-      description
-    });
+    const updates: any = {};
+    if (title !== undefined) updates.title = title;
+    if (status !== undefined) updates.status = status;
+    if (description !== undefined) updates.description = description;
+
+    const data = await adminService.adminUpdateTask(id, updates);
 
     return NextResponse.json({ success: true, data });
   } catch (error: unknown) {
