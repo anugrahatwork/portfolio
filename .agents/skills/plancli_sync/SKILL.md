@@ -38,3 +38,16 @@ plancli log bulk --task=<captured_task_id> --md=task.md
 - List tasks: `plancli task list`
 - Update task status: `plancli task status <task_id> <status_value>` (values: `todo`, `in_progress`, `done`)
 - Add single log: `plancli log add --task=<task_id> -m "<message>"`
+
+### 📅 Microsoft Planner Integration
+- List plans: `plancli planner plan list`
+- Link directory to Plan: `plancli planner plan link <plan_id>`
+- List plan tasks: `plancli planner task list [--me] [--all] [--plan <plan_id>]`
+- Show task details: `plancli planner task show <task_id>`
+- Update task status: `plancli planner task status <task_id> [todo|in_progress|done]`
+- Move task: `plancli planner task move <task_id> <bucket_id>`
+- List buckets: `plancli planner bucket list`
+- Add checklist items: `plancli planner checklist add <task_id> "item 1" ["item 2"...]`
+- Check checklist item: `plancli planner checklist check <task_id> <item_id_or_title>`
+- Uncheck checklist item: `plancli planner checklist uncheck <task_id> <item_id_or_title>`
+
