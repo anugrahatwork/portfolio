@@ -194,3 +194,10 @@ export async function adminCreateAgentLog(log: {
   await docRef.set(activityPayload);
   return activityPayload;
 }
+
+export async function adminUpdateExperience(id: string, updates: { content?: any }): Promise<any> {
+  const docRef = adminDb.collection('experiences').doc(id);
+  await docRef.update(updates);
+  const snap = await docRef.get();
+  return { id, ...snap.data() };
+}

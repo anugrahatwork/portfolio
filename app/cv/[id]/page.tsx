@@ -35,6 +35,12 @@ export default async function PrintableCVPage({ params }: { params: Promise<{ id
     latestExperience = sorted[0];
   }
 
+  // Fetch Skills
+  const skillsSnap = await adminDb.collection("skills")
+    .where("persona_id", "==", id)
+    .get();
+  const skills = skillsSnap.docs.map(d => d.data().name).filter(Boolean);
+
   // Use PrintOnLoad client component to trigger print safely
 
 
@@ -83,6 +89,16 @@ export default async function PrintableCVPage({ params }: { params: Promise<{ id
             <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider mb-3 border-b border-zinc-100 pb-1">Professional Summary</h3>
             <p className="text-sm leading-relaxed text-gray-700">
               {persona.professional_summary || persona.description_of_self}
+            </p>
+          </section>
+        )}
+
+        {/* Core Competencies (Skills) */}
+        {skills && skills.length > 0 && (
+          <section className="mb-8">
+            <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider mb-3 border-b border-zinc-100 pb-1">Core Competencies</h3>
+            <p className="text-sm leading-relaxed text-gray-800 font-medium font-mono">
+              {skills.join(", ")}
             </p>
           </section>
         )}

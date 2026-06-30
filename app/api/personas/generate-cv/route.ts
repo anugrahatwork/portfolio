@@ -207,19 +207,19 @@ CURRENT PERSONA INFO:
 Goal: ${persona.goal || "Not defined yet."}
 Description of self: ${persona.description_of_self || "Not defined yet."}
 
-EXISTING EXPERIENCE (Bullet Points):
-${existingExperiencePoints.length > 0 ? existingExperiencePoints.map((e: string) => "- " + e).join("\n") : "None."}
+EXISTING EXPERIENCE (JSON format):
+${existingExperiencePoints.length > 0 ? JSON.stringify(existingExperiencePoints, null, 2) : "None."}
 
 NEW ACTIVITIES TO INTEGRATE:
 ${formattedActivities.length > 0 ? formattedActivities.join("\n") : "None."}
 
 TASK:
 1. Generate a single cohesive "professional_summary" paragraph that introduces this person as a professional based on their past goal, description, and their newly added activities (e.g. "I am a Software Engineer with a passion for using AI and solving complex programming challenges...").
-2. Restructure and merge the new activities into their existing experience. Organize all experience hierarchically: Group them first by Company, then by Project, and finally output bullet points of achievements for that project.
-3. IMPORTANT: For each Company cluster, output a professional "role" (job title). For the "time" field, you MUST accurately aggregate the explicit \`[Timeline: Start - End]\` tags provided above the activity logs. Do NOT guess timestamps. Output a clean, single timeframe (e.g. "Jan 2024 - Present") spanning the earliest Start date and latest End date of all projects in that company.
-4. IMPORTANT NDA GUARD: Do NOT include any highly sensitive proprietary information, exact revenues, internal code names, or confidential client data in the generated CV. Generalize or omit such details.
-5. Extract a comprehensive list of skills (strings) demonstrated in both the existing experience and new activities.
-
+2. ATS OPTIMIZATION (CRITICAL): Restructure and merge the new activities into their existing experience. Organize hierarchically by Company -> Project. For every single bullet point in "descriptions", you MUST start with a strong, past-tense action verb (e.g., Architected, Engineered, Optimized, Spearheaded). Do not use weak phrasing like "Worked on".
+3. ATS METRICS: Aggressively seek out and highlight any quantifiable results, percentages, or data points from the activities and seamlessly weave them into the bullet points.
+4. IMPORTANT: For each Company cluster, output a professional "role" (job title). For the "time" field, you MUST accurately aggregate the explicit \`[Timeline: Start - End]\` tags provided above the activity logs. Do NOT guess timestamps. Output a clean, single timeframe (e.g. "Jan 2024 - Present") spanning the earliest Start date and latest End date of all projects in that company.
+5. IMPORTANT NDA GUARD: Do NOT include any highly sensitive proprietary information, exact revenues, internal code names, or confidential client data in the generated CV. Generalize or omit such details.
+6. ATS SKILLS (CRITICAL): Extract a comprehensive, deduplicated list of technical skills (e.g., "Next.js", "Go", "TypeScript", "GCP") explicitly mentioned or heavily implied in the logs and existing experience. Do NOT return an empty array if technical words exist.
 OUTPUT JSON FORMAT:
 {
   "professional_summary": "string",

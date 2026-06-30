@@ -14,6 +14,9 @@ export default function CvBuilder() {
 
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [editingExpId, setEditingExpId] = useState<string | null>(null);
+  const [editExpJson, setEditExpJson] = useState<string>("");
+  const [savingExp, setSavingExp] = useState(false);
 
   useEffect(() => {
     fetchPersonas();
@@ -82,6 +85,35 @@ export default function CvBuilder() {
       alert("Error generating CV.");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleEditClick = (exp: DbExperience) => {
+    setEditingExpId(exp.id);
+    setEditExpJson(JSON.stringify(exp.content, null, 2));
+  };
+
+  const handleSaveExp = async (expId: string) => {
+    setSavingExp(true);
+    try {
+      const parsedContent = JSON.parse(editExpJson);
+      const res = await fetch(`/api/experiences/${expId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: parsedContent })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setExperiences(prev => prev.map(e => e.id === expId ? { ...e, content: parsedContent } : e));
+        setEditingExpId(null);
+        alert("Experience updated successfully!");
+      } else {
+        alert(data.error || "Failed to save");
+      }
+    } catch (e) {
+      alert("Invalid JSON format. Please check your syntax.");
+    } finally {
+      setSavingExp(false);
     }
   };
 
@@ -162,8 +194,34 @@ export default function CvBuilder() {
                   <div className="space-y-4">
                     {experiences.slice(0, 1).map(exp => (
                       <div key={exp.id} className="bg-[#1E1F22] p-4 rounded border border-zinc-700/50">
-                        <div className="text-xs text-zinc-500 mb-3 border-b border-zinc-800 pb-2">Last Updated: {new Date(exp.created_at).toLocaleString()}</div>
-                        {Array.isArray(exp.content) && exp.content.map((companyData: any, i: number) => {
+                        <div className="flex justify-between items-center mb-3 border-b border-zinc-800 pb-2">
+                          <div className="text-xs text-zinc-500">Last Updated: {new Date(exp.created_at).toLocaleString()}</div>
+                          {editingExpId !== exp.id && (
+                            <button onClick={() => handleEditClick(exp)} className="text-xs bg-zinc-800 hover:bg-zinc-700 px-2 py-1 rounded text-zinc-300">
+                              Edit JSON
+                            </button>
+                          )}
+                        </div>
+
+                        {editingExpId === exp.id ? (
+                          <div className="flex flex-col gap-3">
+                            <textarea
+                              value={editExpJson}
+                              onChange={(e) => setEditExpJson(e.target.value)}
+                              className="w-full h-96 bg-zinc-900 border border-zinc-700 text-zinc-300 font-mono text-xs p-3 rounded focus:outline-none focus:border-accent"
+                            />
+                            <div className="flex gap-2 justify-end">
+                              <button onClick={() => setEditingExpId(null)} className="px-3 py-1.5 text-xs bg-zinc-800 hover:bg-zinc-700 rounded text-zinc-300">
+                                Cancel
+                              </button>
+                              <button onClick={() => handleSaveExp(exp.id)} disabled={savingExp} className="px-3 py-1.5 text-xs bg-accent hover:opacity-90 rounded text-white font-bold disabled:opacity-50">
+                                {savingExp ? "Saving..." : "Save Changes"}
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            {Array.isArray(exp.content) && exp.content.map((companyData: any, i: number) => {
                           if (typeof companyData === 'string') {
                             return <p key={i} className="text-sm text-zinc-300 leading-relaxed mb-2">- {companyData}</p>;
                           }
@@ -183,6 +241,8 @@ export default function CvBuilder() {
                             </div>
                           );
                         })}
+                          </>
+                        )}
                       </div>
                     ))}
                   </div>
