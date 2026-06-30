@@ -64,3 +64,33 @@ export async function PUT(req: Request) {
     );
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { id, updates } = body;
+
+    if (!id || !updates || typeof updates !== "object") {
+      return NextResponse.json(
+        { error: "Missing required fields (id, updates)" },
+        { status: 400 }
+      );
+    }
+
+    const updatedProject = await adminService.adminUpdateProject(id, updates);
+
+    return NextResponse.json({ success: true, data: updatedProject });
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("API Update Project Error:", errorMessage);
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: 500 }
+    );
+  }
+}

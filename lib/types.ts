@@ -35,6 +35,7 @@ export interface DbProject {
   demo_link: string | null;
   notes_link: string | null;
   visibility: 'public' | 'private';
+  featured?: boolean;
   created_at: string;
   project_personas?: { persona_id: string }[];
 }

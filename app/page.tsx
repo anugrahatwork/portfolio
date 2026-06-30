@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Link from 'next/link';
 import { getProfile, getPersonas, getProjects } from "../lib/data-service";
 
 import { ProfileCard } from "./components/ProfileCard";
@@ -185,6 +186,15 @@ export default function Home() {
   const filteredProjects = selectedPersona
     ? derivedProjects.filter((p) => p.relatedPersonas.includes(selectedPersona))
     : derivedProjects;
+
+  // Sort and limit featured projects for the homepage
+  const homepageProjects = [...filteredProjects]
+    .sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    })
+    .slice(0, 4);
 
   // Derive dynamic profile from latest task and activity streams
   const dynamicProfile: DbProfile = {
@@ -373,10 +383,10 @@ export default function Home() {
                 )}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filteredProjects.length === 0 ? (
+                {homepageProjects.length === 0 ? (
                   <p className="text-center text-gray-500 dark:text-gray-400 col-span-2 py-6 italic">No projects to show.</p>
                 ) : (
-                  filteredProjects.map((project) => (
+                  homepageProjects.map((project) => (
                     <ProjectCard 
                       key={project.id} 
                       project={project} 
@@ -386,6 +396,19 @@ export default function Home() {
                   ))
                 )}
               </div>
+              {filteredProjects.length > 4 && (
+                <div className="mt-2 flex justify-center">
+                  <Link
+                    href="/projects"
+                    className="inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white bg-accent hover:bg-accent/90 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(var(--accent-rgb),0.3)] hover:shadow-[0_0_25px_rgba(var(--accent-rgb),0.5)] cursor-pointer"
+                    style={{
+                      background: "linear-gradient(135deg, var(--accent) 0%, var(--accent-hover, #2563eb) 100%)"
+                    }}
+                  >
+                    View All Projects <span className="ml-2">➔</span>
+                  </Link>
+                </div>
+              )}
             </section>
 
             {/* Tasks Ledger Section */}

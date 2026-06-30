@@ -32,6 +32,13 @@ export async function adminCreateProject(
   return projectPayload;
 }
 
+export async function adminUpdateProject(id: string, updates: Partial<any>): Promise<any> {
+  const docRef = adminDb.collection('projects').doc(id);
+  await docRef.update(updates);
+  const snap = await docRef.get();
+  return { id, ...snap.data() };
+}
+
 export async function adminAddActivity(activity: { content: string; visibility: string; event_type?: string }, personaId: string) {
   const docRef = adminDb.collection('activities').doc();
   const activityPayload = {

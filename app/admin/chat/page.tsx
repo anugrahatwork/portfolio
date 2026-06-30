@@ -5,6 +5,7 @@ import { getPersonas, getProjects, getActivities, getTasksForProject } from "../
 import { DbPersona, DbProject, DbActivity } from "../../../lib/types";
 import { db } from "../../../lib/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { EditProjectModal } from "../components/EditProjectModal";
 
 export default function DiscordChat() {
   // Data State
@@ -21,6 +22,7 @@ export default function DiscordChat() {
   const [activePersonaId, setActivePersonaId] = useState<string | null>(null);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const [editingProject, setEditingProject] = useState<DbProject | null>(null);
   
   // UI State
   const [loading, setLoading] = useState(true);
@@ -312,6 +314,28 @@ export default function DiscordChat() {
     } catch (error) {
       console.error("Error persisting activity:", error);
     }
+  };
+
+  const handleToggleFeatured = async (e: React.MouseEvent, project: DbProject) => {
+    e.stopPropagation();
+    const newFeatured = !project.featured;
+    setProjects(prev => prev.map(p => p.id === project.id ? { ...p, featured: newFeatured } : p));
+    try {
+      await fetch("/api/projects", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: project.id, updates: { featured: newFeatured } })
+      });
+    } catch (err) {
+      console.error("Failed to toggle featured:", err);
+      // Revert on failure
+      setProjects(prev => prev.map(p => p.id === project.id ? { ...p, featured: project.featured } : p));
+    }
+  };
+
+  const handleSaveEdit = (updatedProject: DbProject) => {
+    setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
+    setEditingProject(null);
   };
 
   const handleAddProject = async (e: React.FormEvent) => {
@@ -814,17 +838,36 @@ export default function DiscordChat() {
                    <span className="mr-1.5 text-zinc-500 font-medium text-lg leading-none opacity-70">#</span>
                    <span className="truncate text-[15px] font-medium tracking-tight flex-grow">{proj.title}</span>
                    {isSelected && (
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         setNewTaskParentId(null);
-                         setIsAddTaskOpen(true);
-                       }}
-                       className="opacity-0 group-hover:opacity-100 ml-auto text-zinc-400 hover:text-white transition-opacity cursor-pointer"
-                       title="Add Root Task"
-                     >
-                       <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                     </button>
+                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 ml-auto flex-shrink-0">
+                       <button
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setEditingProject(proj);
+                         }}
+                         className="text-zinc-400 hover:text-blue-400 transition-colors p-1 rounded"
+                         title="Edit Project"
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                       </button>
+                       <button
+                         onClick={(e) => handleToggleFeatured(e, proj)}
+                         className={`transition-colors p-1 rounded ${proj.featured ? 'text-yellow-500' : 'text-zinc-400 hover:text-yellow-500'}`}
+                         title={proj.featured ? 'Unfeature' : 'Feature on homepage'}
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill={proj.featured ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                       </button>
+                       <button
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           setNewTaskParentId(null);
+                           setIsAddTaskOpen(true);
+                         }}
+                         className="text-zinc-400 hover:text-white transition-opacity p-1 rounded"
+                         title="Add Root Task"
+                       >
+                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                       </button>
+                     </div>
                    )}
                  </div>
                  
@@ -1475,6 +1518,14 @@ export default function DiscordChat() {
             </div>
           </div>
         </div>
+      )}
+      {/* EDIT PROJECT MODAL */}
+      {editingProject && (
+        <EditProjectModal 
+          project={editingProject} 
+          onClose={() => setEditingProject(null)} 
+          onSave={handleSaveEdit} 
+        />
       )}
 
     </div>
