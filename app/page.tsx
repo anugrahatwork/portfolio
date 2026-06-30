@@ -300,6 +300,41 @@ export default function Home() {
                 })}
               </div>
             </div>
+
+            {/* Contact Information */}
+            {(activePersonaObj?.contact_information?.email || activePersonaObj?.contact_information?.linkedin || activePersonaObj?.contact_information?.phone) && (
+              <div className="hidden lg:flex flex-col gap-4 glass-card p-6 rounded-2xl">
+                <h3 className="text-xs uppercase font-mono tracking-wider text-zinc-450 dark:text-zinc-500 font-bold border-b border-zinc-100 dark:border-zinc-800 pb-2">
+                  Contact
+                </h3>
+                <div className="flex flex-col gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+                  {activePersonaObj.contact_information.email && (
+                    <a href={`mailto:${activePersonaObj.contact_information.email}`} className="flex items-center gap-3 hover:text-accent transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                      {activePersonaObj.contact_information.email}
+                    </a>
+                  )}
+                  {activePersonaObj.contact_information.linkedin && (
+                    <a href={activePersonaObj.contact_information.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-accent transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                      LinkedIn Profile
+                    </a>
+                  )}
+                  {activePersonaObj.contact_information.phone && (
+                    <a href={`tel:${activePersonaObj.contact_information.phone}`} className="flex items-center gap-3 hover:text-accent transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      {activePersonaObj.contact_information.phone}
+                    </a>
+                  )}
+                  {activePersonaObj.contact_information.website && (
+                    <a href={activePersonaObj.contact_information.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-accent transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                      Portfolio / Web
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
           </aside>
 
           {/* Right Column - Main Content */}
@@ -368,24 +403,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Persona Summary, Branding, Contact & CV Section */}
+            {/* Persona Contact & CV Section */}
             {activePersonaObj && (
               <div className="flex flex-col gap-6 animate-fade-in">
-                {/* Summary and Branding */}
-                {(activePersonaObj.professional_summary || activePersonaObj.description_of_self) && (
-                  <div className="glass-card p-6 rounded-2xl flex flex-col gap-6">
-                    <div>
-                      <h3 className="text-sm font-bold text-accent uppercase tracking-wider mb-2 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
-                        Professional Summary
-                      </h3>
-                      <p className="text-base text-zinc-800 dark:text-zinc-200 leading-relaxed">
-                        {activePersonaObj.professional_summary || activePersonaObj.description_of_self}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 {/* Contact & CV Button */}
                 <div className="glass-card p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex flex-col gap-2">
@@ -417,13 +437,14 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                <button 
-                  onClick={() => alert('View CV functionality coming soon! (This would open a modal or new route with the CV format)')}
-                  className="shrink-0 px-4 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black hover:opacity-90 rounded-lg text-sm font-bold flex items-center gap-2 transition-opacity cursor-pointer"
+                <Link 
+                  href={`/cv/${activePersonaObj.id}`}
+                  target="_blank"
+                  className="shrink-0 px-4 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black hover:opacity-90 rounded-lg text-sm font-bold flex items-center gap-2 transition-opacity cursor-pointer shadow-sm"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10.4 12.6a2 2 0 1 1 3 3L8 21l-4 1 1-4Z"/><path d="M18 21v-8a2 2 0 0 0-2-2h-3"/><path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4"/></svg>
-                  View CV
-                </button>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                  Download CV
+                </Link>
               </div>
               </div>
             )}

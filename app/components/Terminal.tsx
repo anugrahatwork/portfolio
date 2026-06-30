@@ -312,7 +312,7 @@ export function Terminal() {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full h-1/2 bg-black text-green-500 font-mono z-[9999] transition-transform duration-300 ${
+      className={`fixed top-0 left-0 w-full h-1/2 bg-black text-green-500 font-mono z-[9999] transition-transform duration-300 print:hidden ${
         isOpen ? "translate-y-0 shadow-2xl" : "-translate-y-full"
       }`}
     >

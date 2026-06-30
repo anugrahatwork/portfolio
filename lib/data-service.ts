@@ -40,6 +40,7 @@ export async function getPersonas(): Promise<DbPersona[]> {
     const data = doc.data();
     return {
       id: doc.id,
+      ...data,
       name: data.name || "",
       description: data.description || "",
       status: data.status || "active",

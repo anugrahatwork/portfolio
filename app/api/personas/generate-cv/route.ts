@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     const projectIds = [...new Set(activitiesData.map(a => a.context?.project_id).filter(Boolean))];
     const taskIds = [...new Set(activitiesData.map(a => a.context?.task_id).filter(Boolean))];
 
-    const projectsMap: Record<string, string> = {};
+    const projectsMap: Record<string, { label: string, status: string }> = {};
     const tasksMap: Record<string, string> = {};
 
     if (projectIds.length > 0) {
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
             } else {
               label += ` (Company: anugrahatwork.com)`;
             }
-            projectsMap[pId] = label;
+            projectsMap[pId] = { label, status: pData?.status || 'exploring' };
           }
         }
       }
@@ -137,7 +137,30 @@ export async function POST(req: Request) {
 
     for (const [pId, tasksGrp] of Object.entries(groupedByProject)) {
       if (pId !== "unassigned_project") {
-        formattedActivities.push(`Project: ${projectsMap[pId] || pId}`);
+        const pInfo = projectsMap[pId];
+        formattedActivities.push(`Project: ${pInfo?.label || pId}`);
+        
+        // Calculate Timeline
+        const allProjectActs = Object.values(tasksGrp).flat();
+        if (allProjectActs.length > 0) {
+          const times = allProjectActs.map(a => 
+            a.created_at?.toDate ? a.created_at.toDate().getTime() : new Date(a.created_at).getTime()
+          ).filter(t => !isNaN(t));
+          
+          if (times.length > 0) {
+            const minTime = Math.min(...times);
+            const maxTime = Math.max(...times);
+            
+            const startStr = new Date(minTime).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            let endStr = "Present";
+            
+            if (pInfo && (pInfo.status === 'shipped' || pInfo.status === 'paused')) {
+              endStr = new Date(maxTime).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            }
+            
+            formattedActivities.push(`[Timeline: ${startStr} - ${endStr}]`);
+          }
+        }
       }
       
       for (const [tId, acts] of Object.entries(tasksGrp)) {
@@ -155,7 +178,15 @@ export async function POST(req: Request) {
         }
         
         acts.forEach(a => {
-          formattedActivities.push(`${prefix}${a.content}`);
+          let dateStr = "";
+          if (a.created_at) {
+            try {
+              dateStr = `[${(a.created_at?.toDate ? a.created_at.toDate() : new Date(a.created_at)).toISOString().split('T')[0]}] `;
+            } catch (e) {
+              dateStr = "";
+            }
+          }
+          formattedActivities.push(`${prefix}${dateStr}${a.content}`);
         });
       }
     }
@@ -185,8 +216,9 @@ ${formattedActivities.length > 0 ? formattedActivities.join("\n") : "None."}
 TASK:
 1. Generate a single cohesive "professional_summary" paragraph that introduces this person as a professional based on their past goal, description, and their newly added activities (e.g. "I am a Software Engineer with a passion for using AI and solving complex programming challenges...").
 2. Restructure and merge the new activities into their existing experience. Organize all experience hierarchically: Group them first by Company, then by Project, and finally output bullet points of achievements for that project.
-3. IMPORTANT NDA GUARD: Do NOT include any highly sensitive proprietary information, exact revenues, internal code names, or confidential client data in the generated CV. Generalize or omit such details.
-4. Extract a comprehensive list of skills (strings) demonstrated in both the existing experience and new activities.
+3. IMPORTANT: For each Company cluster, output a professional "role" (job title). For the "time" field, you MUST accurately aggregate the explicit \`[Timeline: Start - End]\` tags provided above the activity logs. Do NOT guess timestamps. Output a clean, single timeframe (e.g. "Jan 2024 - Present") spanning the earliest Start date and latest End date of all projects in that company.
+4. IMPORTANT NDA GUARD: Do NOT include any highly sensitive proprietary information, exact revenues, internal code names, or confidential client data in the generated CV. Generalize or omit such details.
+5. Extract a comprehensive list of skills (strings) demonstrated in both the existing experience and new activities.
 
 OUTPUT JSON FORMAT:
 {
@@ -194,6 +226,8 @@ OUTPUT JSON FORMAT:
   "experiences": [
     {
       "company": "string",
+      "role": "string",
+      "time": "string",
       "projects": [
         {
           "name": "string",

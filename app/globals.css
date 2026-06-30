@@ -138,4 +138,156 @@ a:focus-visible {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+@import "tailwindcss";
 
+:root {
+  --background: #f9fafb;
+  --foreground: #2c3e50;
+  --accent: #3b82f6;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-accent: var(--accent);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-card-shadow: var(--card-shadow);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #121317;
+    --foreground: #e1e1e6;
+    --accent: #3b82f6;
+    --card-bg: #1e1e2f;
+    --card-border: #323244;
+    --card-shadow: 0 1px 3px rgba(59, 130, 246, 0.3);
+  }
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+:focus-visible {
+  outline-color: var(--accent);
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-radius: 3px;
+  transition: outline-color 0.3s ease;
+}
+
+a:focus-visible {
+  outline-offset: 2px;
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: var(--accent);
+  border-radius: 4px;
+  transition: outline-color 0.3s ease;
+}
+
+/* Glassmorphism Cards & Layout Utilities */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.7);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background-color: rgba(18, 19, 23, 0.7);
+    border: 1px solid rgba(50, 50, 68, 0.45);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(59, 130, 246, 0.03);
+  }
+  
+  .glass-card:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(59, 130, 246, 0.08);
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbar for activity ledger */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+@media print {
+  body {
+    background-color: white !important;
+    -webkit-print-color-adjust: exact;
+  }
+  @page {
+    margin: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

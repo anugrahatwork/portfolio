@@ -99,6 +99,8 @@ export interface DbExperience {
   created_at: string;
   content: {
     company: string;
+    role?: string;
+    time?: string;
     projects: {
       name: string;
       descriptions: string[];
