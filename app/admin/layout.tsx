@@ -12,7 +12,7 @@ export default function AdminLayout({
     <div className="flex h-screen bg-[#1E1F22] font-sans overflow-hidden">
       {/* Global Admin Navigation (Chat, Roles, Settings) */}
       <Sidebar />
-      <main className="flex-grow flex flex-col overflow-hidden bg-[#313338]">
+      <main className="flex-grow flex flex-col overflow-y-auto scrollbar-hide bg-[#313338]">
         {children}
       </main>
     </div>

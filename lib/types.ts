@@ -7,6 +7,20 @@ export interface DbProfile {
   created_at: string;
 }
 
+export interface DbContactInfo {
+  email?: string;
+  phone?: string;
+  linkedin?: string;
+  website?: string;
+  [key: string]: string | undefined;
+}
+
+export interface DbCertification {
+  name: string;
+  type: 'external' | 'internal';
+  url?: string;
+}
+
 export interface DbPersona {
   id: string;
   name: string;
@@ -15,6 +29,11 @@ export interface DbPersona {
   visibility: 'public' | 'private';
   created_at: string;
   persona_evolutions?: DbPersonaEvolution[];
+  contact_information?: DbContactInfo;
+  goal?: string;
+  description_of_self?: string;
+  professional_summary?: string;
+  certifications?: DbCertification[];
 }
 
 export interface DbPersonaEvolution {
@@ -35,6 +54,7 @@ export interface DbProject {
   demo_link: string | null;
   notes_link: string | null;
   visibility: 'public' | 'private';
+  company?: string | null;
   featured?: boolean;
   created_at: string;
   project_personas?: { persona_id: string }[];
@@ -71,4 +91,25 @@ export interface DbTask {
   description: string;
   status: TaskStatus;
   created_at: any;
+}
+
+export interface DbExperience {
+  id: string;
+  persona_id: string;
+  created_at: string;
+  content: {
+    company: string;
+    projects: {
+      name: string;
+      descriptions: string[];
+    }[];
+  }[];
+  related_projects?: string[];
+}
+
+export interface DbSkill {
+  id: string;
+  persona_id: string;
+  name: string;
+  created_at: string;
 }

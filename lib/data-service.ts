@@ -1,6 +1,6 @@
 import { db } from './firebase';
 import { collection, getDocs, getDoc, doc, query, where, limit, orderBy } from 'firebase/firestore';
-import { DbProfile, DbPersona, DbProject, DbActivity, Role, DbPersonaEvolution } from './types';
+import { DbProfile, DbPersona, DbProject, DbActivity, Role, DbPersonaEvolution, DbExperience, DbSkill } from './types';
 
 export async function getUserRole(userId: string): Promise<Role> {
   try {
@@ -157,4 +157,34 @@ export async function getAllTasks(): Promise<any[]> {
   });
   tasks.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   return tasks;
+}
+
+export async function getExperiences(personaId: string): Promise<DbExperience[]> {
+  const q = query(collection(db, "experiences"), where("persona_id", "==", personaId));
+  const snap = await getDocs(q);
+  const experiences = snap.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      created_at: data.created_at?.toDate ? data.created_at.toDate().toISOString() : (data.created_at || new Date().toISOString())
+    } as DbExperience;
+  });
+  experiences.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return experiences;
+}
+
+export async function getSkills(personaId: string): Promise<DbSkill[]> {
+  const q = query(collection(db, "skills"), where("persona_id", "==", personaId));
+  const snap = await getDocs(q);
+  const skills = snap.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      created_at: data.created_at?.toDate ? data.created_at.toDate().toISOString() : (data.created_at || new Date().toISOString())
+    } as DbSkill;
+  });
+  skills.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return skills;
 }

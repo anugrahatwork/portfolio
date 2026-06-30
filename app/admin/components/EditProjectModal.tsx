@@ -68,6 +68,17 @@ export function EditProjectModal({ project, onClose, onSave }: EditProjectModalP
             />
           </div>
 
+          <div>
+            <label className="block text-xs font-mono text-zinc-400 mb-1">Company / Organization</label>
+            <input 
+              type="text" 
+              value={editingProject.company || ''} 
+              onChange={e => setEditingProject({...editingProject, company: e.target.value})}
+              className="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-sm text-zinc-200 focus:border-accent focus:outline-none"
+              placeholder="e.g. Acme Corp (Optional)"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-mono text-zinc-400 mb-1">Status</label>

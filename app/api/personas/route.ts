@@ -1,7 +1,26 @@
 import { NextResponse } from "next/server";
 import * as adminService from "../../../lib/admin-service";
-import { verifyRequestAuth } from "@/lib/firebase-admin";
+import { verifyRequestAuth, adminDb } from "@/lib/firebase-admin";
 
+export async function GET(req: Request) {
+  try {
+    const isAuthorized = await verifyRequestAuth(req);
+    if (!isAuthorized) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const personasSnap = await adminDb.collection("personas").get();
+    const personas = personasSnap.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    return NextResponse.json(personas);
+  } catch (error: any) {
+    console.error("API Get Personas Error:", error);
+    return NextResponse.json({ error: error.message || String(error) }, { status: 500 });
+  }
+}
 export async function POST(req: Request) {
   try {
     const isAuthorized = await verifyRequestAuth(req);
@@ -52,7 +71,7 @@ export async function PATCH(req: Request) {
     }
 
     const body = await req.json();
-    const { id, name, description, status, visibility } = body;
+    const { id, name, description, status, visibility, updates } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -61,12 +80,19 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const data = await adminService.adminUpdatePersona(id, {
+    // Merge direct fields with updates object if provided
+    const payload = {
       name,
       description,
       status,
-      visibility
-    });
+      visibility,
+      ...(updates || {})
+    };
+
+    // Remove undefined values
+    Object.keys(payload).forEach(key => payload[key] === undefined && delete payload[key]);
+
+    const data = await adminService.adminUpdatePersona(id, payload);
 
     return NextResponse.json({ success: true, data });
   } catch (error: unknown) {

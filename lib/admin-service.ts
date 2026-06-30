@@ -73,12 +73,48 @@ export async function adminCreatePersona(persona: {
 
 export async function adminUpdatePersona(
   id: string,
-  updates: { name?: string; description?: string; status?: 'active' | 'exploring' | 'paused'; visibility?: 'public' | 'private' }
+  updates: Partial<import('./types').DbPersona>
 ): Promise<any> {
   const docRef = adminDb.collection('personas').doc(id);
   await docRef.update(updates);
   const snap = await docRef.get();
   return { id, ...snap.data() };
+}
+
+export async function adminCreateExperience(experience: { persona_id: string; content: string[]; related_projects?: string[] }) {
+  const docRef = adminDb.collection('experiences').doc();
+  const payload = {
+    id: docRef.id,
+    ...experience,
+    created_at: new Date()
+  };
+  await docRef.set(payload);
+  return payload;
+}
+
+export async function adminDeleteExperiencesByPersona(personaId: string) {
+  const snapshot = await adminDb.collection('experiences').where('persona_id', '==', personaId).get();
+  const batch = adminDb.batch();
+  snapshot.docs.forEach(doc => batch.delete(doc.ref));
+  await batch.commit();
+}
+
+export async function adminCreateSkill(skill: { persona_id: string; name: string }) {
+  const docRef = adminDb.collection('skills').doc();
+  const payload = {
+    id: docRef.id,
+    ...skill,
+    created_at: new Date()
+  };
+  await docRef.set(payload);
+  return payload;
+}
+
+export async function adminDeleteSkillsByPersona(personaId: string) {
+  const snapshot = await adminDb.collection('skills').where('persona_id', '==', personaId).get();
+  const batch = adminDb.batch();
+  snapshot.docs.forEach(doc => batch.delete(doc.ref));
+  await batch.commit();
 }
 
 export async function adminDeletePersona(id: string) {

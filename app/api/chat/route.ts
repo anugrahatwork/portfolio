@@ -125,7 +125,7 @@ export async function POST(req: Request) {
     }
 
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       tools: tools as any // SDK requires any for tool definitions
     });
