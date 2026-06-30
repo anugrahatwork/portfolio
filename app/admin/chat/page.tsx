@@ -334,7 +334,7 @@ export default function DiscordChat() {
   };
 
   const handleSaveEdit = (updatedProject: DbProject) => {
-    setProjects(prev => prev.map(p => p.id === updatedProject.id ? updatedProject : p));
+    setProjects(prev => prev.map(p => p.id === updatedProject.id ? { ...p, ...updatedProject } : p));
     setEditingProject(null);
   };
 
