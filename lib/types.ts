@@ -115,3 +115,16 @@ export interface DbSkill {
   name: string;
   created_at: string;
 }
+
+export interface DbConnectedApp {
+  id: string;              // Subdomain (e.g. "openclaw")
+  subdomain: string;       // "openclaw"
+  name?: string;           // Display Name (e.g. "OpenClaw Game Engine")
+  project_id?: string;     // Linked project slug
+  local_port: number;      // 8080
+  public_url: string;      // "https://openclaw.anugrahatwork.com"
+  status: 'online' | 'offline';
+  created_at: string;
+  last_heartbeat: string;
+  api_key_id?: string;
+}

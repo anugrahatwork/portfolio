@@ -201,3 +201,74 @@ export async function adminUpdateExperience(id: string, updates: { content?: any
   const snap = await docRef.get();
   return { id, ...snap.data() };
 }
+
+export async function adminRegisterConnectedApp(app: {
+  subdomain: string;
+  name?: string;
+  project_id?: string;
+  local_port: number;
+  public_url: string;
+  api_key_id?: string;
+}) {
+  const docRef = adminDb.collection('connected_apps').doc(app.subdomain);
+  const now = new Date().toISOString();
+  const payload = {
+    id: app.subdomain,
+    subdomain: app.subdomain,
+    name: app.name || app.subdomain,
+    project_id: app.project_id || null,
+    local_port: app.local_port,
+    public_url: app.public_url,
+    status: 'online',
+    created_at: now,
+    last_heartbeat: now,
+    api_key_id: app.api_key_id || null,
+  };
+  await docRef.set(payload, { merge: true });
+  return payload;
+}
+
+export async function adminUpdateAppHeartbeat(subdomain: string) {
+  const docRef = adminDb.collection('connected_apps').doc(subdomain);
+  const now = new Date().toISOString();
+  await docRef.update({
+    last_heartbeat: now,
+    status: 'online',
+  });
+  return { subdomain, last_heartbeat: now, status: 'online' };
+}
+
+export async function adminUnregisterConnectedApp(subdomain: string) {
+  const docRef = adminDb.collection('connected_apps').doc(subdomain);
+  await docRef.update({
+    status: 'offline',
+  });
+  return { subdomain, status: 'offline' };
+}
+
+export async function adminGetConnectedApps() {
+  const snap = await adminDb.collection('connected_apps').get();
+  const nowMs = Date.now();
+  const apps = snap.docs.map(doc => {
+    const data = doc.data();
+    let status = data.status || 'offline';
+    // If last_heartbeat is older than 60 seconds and was marked online, treat as offline
+    if (status === 'online' && data.last_heartbeat) {
+      const lastHb = new Date(data.last_heartbeat).getTime();
+      if (nowMs - lastHb > 60000) {
+        status = 'offline';
+      }
+    }
+    return {
+      ...data,
+      status,
+    };
+  });
+  return apps;
+}
+
+export async function adminDeleteConnectedApp(subdomain: string) {
+  const docRef = adminDb.collection('connected_apps').doc(subdomain);
+  await docRef.delete();
+  return { subdomain };
+}
