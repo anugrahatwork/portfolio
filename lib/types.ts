@@ -122,6 +122,7 @@ export interface DbConnectedApp {
   name?: string;           // Display Name (e.g. "OpenClaw Game Engine")
   project_id?: string;     // Linked project slug
   local_port: number;      // 8080
+  type?: 'http' | 'rdp' | 'ssh' | 'tcp' | string; // "http", "rdp", "ssh", "tcp"
   public_url: string;      // "https://openclaw.anugrahatwork.com"
   status: 'online' | 'offline';
   created_at: string;

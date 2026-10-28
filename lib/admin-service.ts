@@ -207,6 +207,7 @@ export async function adminRegisterConnectedApp(app: {
   name?: string;
   project_id?: string;
   local_port: number;
+  type?: string;
   public_url: string;
   api_key_id?: string;
 }) {
@@ -218,6 +219,7 @@ export async function adminRegisterConnectedApp(app: {
     name: app.name || app.subdomain,
     project_id: app.project_id || null,
     local_port: app.local_port,
+    type: app.type || 'http',
     public_url: app.public_url,
     status: 'online',
     created_at: now,

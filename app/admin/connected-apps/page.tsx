@@ -93,11 +93,11 @@ export default function ConnectedAppsPage() {
         <div>
           <div className="text-xs font-semibold text-zinc-300 mb-1">Bridge a new application from your terminal:</div>
           <code className="text-xs font-mono text-emerald-400 bg-zinc-900 px-3 py-1.5 rounded-md border border-zinc-800 inline-block">
-            plancli bridge start &lt;subdomain&gt; &lt;port&gt;
+            plancli bridge start &lt;subdomain&gt; &lt;port&gt; [--type http|rdp|ssh|tcp]
           </code>
         </div>
         <div className="text-xs text-zinc-500 font-mono">
-          e.g. <span className="text-zinc-400">plancli bridge start openclaw 8080</span>
+          e.g. <span className="text-zinc-400">plancli bridge start rdp 3389 --type rdp</span>
         </div>
       </div>
 
@@ -121,6 +121,7 @@ export default function ConnectedAppsPage() {
               <tr>
                 <th className="px-6 py-4 font-semibold">Status</th>
                 <th className="px-6 py-4 font-semibold">App / Subdomain</th>
+                <th className="px-6 py-4 font-semibold">Type</th>
                 <th className="px-6 py-4 font-semibold">Local Target</th>
                 <th className="px-6 py-4 font-semibold">Public URL</th>
                 <th className="px-6 py-4 font-semibold">Last Heartbeat</th>
@@ -151,6 +152,39 @@ export default function ConnectedAppsPage() {
                     <td className="px-6 py-4">
                       <div className="font-semibold text-zinc-200">{app.name || app.subdomain}</div>
                       <div className="text-xs text-zinc-500 font-mono">{app.subdomain}</div>
+                    </td>
+
+                    {/* Type Badge */}
+                    <td className="px-6 py-4">
+                      {(() => {
+                        const t = (app.type || "http").toLowerCase();
+                        if (t === "rdp") {
+                          return (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                              🖥️ RDP
+                            </span>
+                          );
+                        }
+                        if (t === "ssh") {
+                          return (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                              💻 SSH
+                            </span>
+                          );
+                        }
+                        if (t === "tcp") {
+                          return (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                              🗄️ TCP
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                            🌐 HTTP
+                          </span>
+                        );
+                      })()}
                     </td>
 
                     {/* Local Target */}

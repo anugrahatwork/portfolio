@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { subdomain, port, name, project_id } = body;
+    const { subdomain, port, name, project_id, type } = body;
 
     if (!subdomain || typeof subdomain !== "string" || !subdomain.trim()) {
       return NextResponse.json({ error: "Missing required field: subdomain" }, { status: 400 });
@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       name: name || cleanSubdomain,
       project_id: project_id || null,
       local_port: localPort,
+      type: type || "http",
       public_url: publicUrl,
     });
 
